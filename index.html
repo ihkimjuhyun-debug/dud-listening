@@ -1,42 +1,14 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semi-Duolingo Prep</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="progress-bar"><div id="progress" style="width: 30%;"></div></div>
-      <span class="timer">00:00</span>
-    </header>
+<header>
+  <div class="progress-bar"><div id="progress" style="width: 30%;"></div></div>
+  <button id="view-history-btn" class="secondary-btn">나의 학습 기록</button>
+</header>
 
-    <main>
-      <section id="question-section">
-        <h2>Write about the photo</h2>
-        <div class="image-container">
-          <img id="target-image" src="https://via.placeholder.com/400x300?text=Loading..." alt="Quiz Image">
-        </div>
-        <textarea id="user-input" placeholder="영어로 사진을 묘사하세요 (최소 2문장 이상)..."></textarea>
-      </section>
-
-      <section id="result-section" class="hidden">
-        <div class="score-card">
-          <h3>Estimated Score</h3>
-          <div id="score-value">--</div>
-          <p id="feedback-msg"></p>
-        </div>
-        <div id="corrections"></div>
-        <button id="next-btn" onclick="location.reload()">Next Challenge</button>
-      </section>
-    </main>
-
-    <footer>
-      <button id="submit-btn">SUBMIT</button>
-    </footer>
-  </div>
-  <script type="module" src="/main.js"></script>
-</body>
-</html>
+<section id="history-section" class="hidden">
+  <h2>과거 평가 복기</h2>
+  <div id="history-list"></div>
+  
+  <h2>나만의 단어장 (누적)</h2>
+  <div id="vocab-list"></div>
+  
+  <button id="close-history-btn">닫기</button>
+</section>
