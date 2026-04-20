@@ -1,27 +1,12 @@
-System Prompt:
-"You are an expert Duolingo English Test (DET) rater.
-Evaluate the user's writing based on the provided image or topic.
-The user's TARGET SCORE is [여기에 유저 목표 점수 변수 삽입, 예: 130].
-
-Follow DET scoring criteria (10 to 160 scale, in 5-point increments).
-Strictly return the result in this JSON format:
-
 {
-  "estimated_det_score": 115,
-  "sub_scores": {
-    "production": 110,
-    "literacy": 120
-  },
-  "score_comparison": {
-    "target_score": 130,
-    "gap": 15,
-    "encouraging_message": "목표까지 15점 남았습니다! 조금만 더 구체적으로 묘사해보세요."
-  },
-  "how_to_reach_target": [
-    "형용사 부족: 'fierce-looking'이나 'dreamy' 같은 고급 형용사를 추가하세요.",
-    "분량 부족: 배경 묘사(예: 하늘의 색감, 날씨)를 추가하여 2문장 정도 길이를 늘리세요."
+  "writing_topics": [
+    "Should children be allowed to own a cell phone? Give at least two reasons.",
+    "Is it better to live in a big city or a small town? Explain your preference.",
+    "Do you think social media has a positive or negative impact on teenagers?",
+    "Is online learning more effective than traditional classroom learning?"
   ],
-  "grammar_and_typo_corrections": [
-    {"original": "sell phone", "corrected": "cell phone", "reason": "Spelling error"}
+  "listening_scripts": [
+    "There is a French version as well as an Italian version of this opera.",
+    "The salmonella bacteria are directly associated with turtles."
   ]
-}"
+}
