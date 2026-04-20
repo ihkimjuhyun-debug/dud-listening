@@ -1,66 +1,42 @@
-// main.js
-// 기존의 import.meta.env.VITE_GEMINI_API_KEY 코드는 삭제합니다.
+// main.js에 추가 및 수정할 부분
 
-const IMAGE_URL = "[https://source.unsplash.com/random/800x600/?nature,city,people](https://source.unsplash.com/random/800x600/?nature,city,people)";
+// [추가] 브라우저 저장소(localStorage)에 카테고리별로 데이터 누적 저장하기
+function saveToStorage(resultData) {
+  const timestamp = new Date().toLocaleString();
 
-const targetImg = document.getElementById('target-image');
-const submitBtn = document.getElementById('submit-btn');
-const userInput = document.getElementById('user-input');
+  // 1. 전체 기록 통째로 저장 (복기용)
+  let historyStorage = JSON.parse(localStorage.getItem('det_history')) || [];
+  historyStorage.push({ date: timestamp, data: resultData });
+  localStorage.setItem('det_history', JSON.stringify(historyStorage));
 
-// 1. 랜덤 사진 세팅
-targetImg.src = IMAGE_URL;
+  // 2. 단어 및 표현 따로 누적 저장 (나만의 단어장)
+  if (resultData.vocabulary && resultData.vocabulary.length > 0) {
+    let vocabStorage = JSON.parse(localStorage.getItem('det_vocab')) || [];
+    vocabStorage = vocabStorage.concat(resultData.vocabulary);
+    localStorage.setItem('det_vocab', JSON.stringify(vocabStorage));
+  }
 
-// 2. Vercel 백엔드로 평가 요청
-async function evaluateWriting(text) {
-  try {
-    // 구글 API가 아닌, 우리가 만든 api/evaluate.js 로 요청을 보냄
-    const response = await fetch('/api/evaluate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text })
-    });
-
-    if (!response.ok) {
-      throw new Error('Server error');
-    }
-
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    alert("평가 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-    return null;
+  // 3. 문법(Grammar Focus) 따로 누적 저장 (오답노트)
+  if (resultData.grammar_focus && resultData.grammar_focus.length > 0) {
+    let grammarStorage = JSON.parse(localStorage.getItem('det_grammar')) || [];
+    grammarStorage = grammarStorage.concat(resultData.grammar_focus);
+    localStorage.setItem('det_grammar', JSON.stringify(grammarStorage));
   }
 }
 
+// [수정] 제출 버튼 로직
 submitBtn.onclick = async () => {
-  if (userInput.value.trim().length < 10) {
-    alert("조금 더 길게 작성해주세요!");
-    return;
-  }
-
-  submitBtn.innerText = "Analyzing...";
-  submitBtn.disabled = true;
-
+  // ... (기존 로직 동일) ...
   const result = await evaluateWriting(userInput.value);
   
   if (result) {
+    // API 결과를 화면에 뿌려주기 전에 로컬스토리지에 저장!
+    saveToStorage(result);
+
     document.getElementById('question-section').classList.add('hidden');
     document.getElementById('result-section').classList.remove('hidden');
-    document.getElementById('score-value').innerText = result.score;
-    document.getElementById('feedback-msg').innerText = result.feedback;
     
-    // 교정 내역 출력 (옵션)
-    const correctionsDiv = document.getElementById('corrections');
-    if (result.corrections && result.corrections.length > 0) {
-      let correctionsHtml = "<h4>Corrections:</h4><ul>";
-      result.corrections.forEach(c => {
-        correctionsHtml += `<li><del>${c.original}</del> -> <b>${c.better}</b></li>`;
-      });
-      correctionsHtml += "</ul>";
-      correctionsDiv.innerHTML = correctionsHtml;
-    }
+    // (이곳에 화면에 결과 렌더링하는 기존 코드 유지)
+    renderResultUI(result); 
   }
-  
-  submitBtn.style.display = "none";
 };
